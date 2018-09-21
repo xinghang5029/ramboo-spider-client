@@ -157,6 +157,11 @@ class TaskList(object):
 
 
     def acq_navi(self,task_id):
+        """
+        导航url采集
+        :param task_id:
+        :return:
+        """
         info = BasicDao.task_info_by_id(task_id)
         settings = {}
         settings["url"] = info['url']
@@ -174,6 +179,10 @@ class TaskList(object):
 
 
     def acq_field(self):
+        """
+        详情字段采集
+        :return:
+        """
         settings = {}
         settings["timeout"] = 10
         settings["headers"] = None
