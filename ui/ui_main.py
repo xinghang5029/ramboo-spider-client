@@ -46,10 +46,6 @@ class Ui_Main(QMainWindow):
         self.right_widget.tabCloseRequested.connect(self.close_Tab)
 
 
-
-
-
-
         splitter.addWidget(left_widget)
         splitter.addWidget(self.right_widget)
         splitter.setStretchFactor(0,1);

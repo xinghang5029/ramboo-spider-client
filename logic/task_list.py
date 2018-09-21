@@ -164,8 +164,8 @@ class TaskList(object):
         settings["headers"] = None
         settings["cookies"] = None
         settings["proxy"] = None
-        # download = DownLoad(settings)
-        download = DownLoad(settings,type="dfa")
+        download = DownLoad(settings)
+        # download = DownLoad(settings,type="dfa")
         spider = Spider(download,info)
         spider.start()
 
