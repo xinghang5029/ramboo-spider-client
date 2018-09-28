@@ -18,6 +18,7 @@ class Table_Util(object):
             rowPosition = table.rowCount()
             table.insertRow(rowPosition)
             operation = QComboBox(parent=table)
+            operation.setStyleSheet(r'QComboBox{border: 1px solid #D1D1D1;}')
             if table_name == "navi_table":
                 operation.addItem("单击")
                 operation.addItem("元素")
@@ -64,6 +65,15 @@ class Table_Util(object):
         table_list = [prev.navi_table,prev.flip_table,prev.field_table]
         target_table = list(filter(lambda x: not x.isHidden(), table_list))[0]
         Table_Util.clean_all_data(target_table)
+
+    @classmethod
+    def clean_selected_data(cls,prev):
+        table_list = [prev.navi_table,prev.flip_table,prev.field_table]
+        target_table = list(filter(lambda x: not x.isHidden(), table_list))[0]
+        while len(target_table.selectedIndexes())!=0:
+            selectRow = target_table.selectedIndexes()
+            target_table.removeRow(selectRow[0].row())
+
 
     @classmethod
     def get_navi_table(cls,table):

@@ -47,10 +47,10 @@ class DownLoad(object):
         :return:
         """
         try:
-            # dcap = dict(DesiredCapabilities.PHANTOMJS)  #设置userAgent
-            # dcap["phantomjs.page.settings.userAgent"] = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:25.0) Gecko/20100101 Firefox/25.0 ")
-            # driver = webdriver.PhantomJS(executable_path=r'D:\phantomjs-2.1.1-windows\bin\phantomjs.exe',desired_capabilities=dcap) #加载网址
-            driver = webdriver.Chrome(r'C:\Users\Ramboo\Downloads\chromedriver\chromedriver.exe')
+            dcap = dict(DesiredCapabilities.PHANTOMJS)  #设置userAgent
+            dcap["phantomjs.page.settings.userAgent"] = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:25.0) Gecko/20100101 Firefox/25.0 ")
+            driver = webdriver.PhantomJS(executable_path=r'D:\phantomjs-2.1.1-windows\bin\phantomjs.exe',desired_capabilities=dcap) #加载网址
+            # driver = webdriver.Chrome(r'C:\Users\Ramboo\Downloads\chromedriver\chromedriver.exe')
             driver.get(self.url)
             return driver.page_source
         except Exception as a:

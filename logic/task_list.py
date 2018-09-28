@@ -162,6 +162,7 @@ class TaskList(object):
         :param task_id:
         :return:
         """
+        print("=========================本次采集开始===============================")
         info = BasicDao.task_info_by_id(task_id)
         settings = {}
         settings["url"] = info['url']
@@ -169,11 +170,10 @@ class TaskList(object):
         settings["headers"] = None
         settings["cookies"] = None
         settings["proxy"] = None
-        download = DownLoad(settings)
-        # download = DownLoad(settings,type="dfa")
+        # download = DownLoad(settings)
+        download = DownLoad(settings,type="dfa")
         spider = Spider(download,info)
         spider.start()
-
         file_thread = threading.Thread(target=self.acq_field, args=())
         file_thread.start()
 
@@ -193,8 +193,8 @@ class TaskList(object):
             if not RbQueue.rb_queue.empty():
                 task = RbQueue.rb_queue.get()
                 settings["url"] = task['url']
-                # download = DownLoad(settings)
-                download = DownLoad(settings,type="fdsf")
+                download = DownLoad(settings)
+                # download = DownLoad(settings,type="fdsf")
                 spider = Spider(download,task['rule'])
                 spider.detail_start()
 
