@@ -30,7 +30,7 @@ class Ui_login(QWidget):
         top_grid.setSpacing(0)
         top_grid.setContentsMargins(0,0,0,0)
         top_grid.setAlignment(Qt.AlignRight|Qt.AlignTop)
-        top_grid_widget.setStyleSheet("#top_widget{border-image:url(images/login.png)}")
+        top_grid_widget.setStyleSheet("#top_widget{border-image:url(../images/login.png)}")
 
 
         close_btn_style = r'QPushButton{border:solid 0px grey;width:30px;height:30px;border-radius:0px;color:white;}' \
@@ -69,8 +69,8 @@ class Ui_login(QWidget):
 
 
 
-        line_edit_style = "QLineEdit{background:transparent;border-width:0;border-image:url(images/line.png)}" \
-                          "QLineEdit:focus{border-image:url(images/line_focus.png)}"
+        line_edit_style = "QLineEdit{background:transparent;border-width:0;border-image:url(../images/line.png)}" \
+                          "QLineEdit:focus{border-image:url(../images/line_focus.png)}"
 
 
         username_edit = QLineEdit(button_grid_widget)
@@ -116,7 +116,7 @@ class Ui_login(QWidget):
         spacing1.setVisible(True)
         spacing1.setStyleSheet("QLabel{background: transparent;border:solid 0px grey}")
 
-        login_btn_style = r'QPushButton{font:bold 20px;border:solid 1px grey;width:30px;height:60px;border-radius:0px;color:white;border-image:url(images/login-btn.png)}' \
+        login_btn_style = r'QPushButton{font:bold 20px;border:solid 1px grey;width:30px;height:60px;border-radius:0px;color:white;border-image:url(../images/login-btn.png)}' \
                         r'QPushButton:hover{ border-style: inset; }'
 
         login_btn = QPushButton(button_grid_widget)

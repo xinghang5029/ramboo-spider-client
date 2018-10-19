@@ -1,7 +1,9 @@
 # coding=utf-8
 from lxml import etree
 from util.rbQueue import RbQueue
+from util.support import Support
 import json,traceback
+
 class Processor(object):
 
     def process(self,resp,info):
@@ -32,6 +34,7 @@ class Processor(object):
                     task['url'] =  content
                 print(task['url'])
                 task['rule'] = rule['field']
+                task['id'] = info['id']
                 RbQueue.rb_queue.put(task)
         except Exception as a:
             print(a)
@@ -54,6 +57,8 @@ class FieldProcess(object):
             result_list = []
             for field in field_list:
                 content = selectors.xpath(field['xpath'])[0].xpath('string(.)')
+                if field['reg']:
+                    content = Support.reg_validate_python(content,field['reg'])
                 result = {}
                 result['field'] = field['field']
                 result['content'] = content

@@ -11,6 +11,11 @@ class BasicDao(object):
     INSERT_SINGLE_TASK = r'insert into rb_task values (null,?,?,?,?,?,?,?,?)'
     UPDATE_SINGLE_TASK = r'update rb_task set name = ?, url = ?, theme = ?, category = ?,acq_type = ? ,rule = ? where id = {}'
     DELETE_TASK_BY_IDS = r'delete from rb_task where id in ({})'
+    DELETE_ACQ_STRATEGY_BY_IDS = r'delete from rb_acq_strategy where task_id in ({})'
+    QUERY_ACQ_RULE_BY_TASK_ID = r'select id,rule from rb_acq_strategy where task_id = ?'
+    UPDATE_ACQ_RULE_BY_TASK_ID = r'update rb_acq_strategy set rule = ? where task_id = ?'
+    INSERT_ACQ_RULE = r'insert into rb_acq_strategy values (null,?,?)'
+
 
     @classmethod
     def task_info_by_id(cls,id):
@@ -174,11 +179,17 @@ class BasicDao(object):
 
     @classmethod
     def delete_task_by_ids(cls,ids):
+        """
+        根据id删除站点任务,同时删除关联的采集策略
+        :param ids:
+        :return:
+        """
         try:
             idstr = ",".join(ids)
             conn = sqlite3.connect(Constant.DB_PATH)
             c = conn.cursor()
             c.execute(BasicDao.DELETE_TASK_BY_IDS.format(idstr))
+            c.execute(BasicDao.DELETE_ACQ_STRATEGY_BY_IDS.format(idstr))
             return True
         except Exception as a:
             return False
@@ -186,4 +197,39 @@ class BasicDao(object):
             conn.commit()
             conn.close()
 
+    @classmethod
+    def query_strategy_by_taskid(cls,task_id):
+        try:
+            conn = sqlite3.connect(Constant.DB_PATH)
+            c = conn.cursor()
+            info = {}
+            rows = c.execute(BasicDao.QUERY_ACQ_RULE_BY_TASK_ID,(task_id,))
+            for row in rows:
+                info['id'] = row[0]
+                info['rule'] = row[1]
+            return info
+        except Exception as a:
+            return None
+        finally:
+            conn.commit()
+            conn.close()
 
+
+    @classmethod
+    def save_acq_strategy(cls,task_id,content):
+        try:
+            conn = sqlite3.connect(Constant.DB_PATH)
+            c = conn.cursor()
+            rule_list = c.execute(BasicDao.QUERY_ACQ_RULE_BY_TASK_ID,(task_id,))
+            flag = []
+            for rule in rule_list:
+                flag.append(1)
+            if flag:
+                c.execute(BasicDao.UPDATE_ACQ_RULE_BY_TASK_ID,(content,task_id))
+            else:
+                c.execute(BasicDao.INSERT_ACQ_RULE,(task_id,content))
+        except:
+            pass
+        finally:
+            conn.commit()
+            conn.close()

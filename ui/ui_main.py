@@ -7,6 +7,7 @@ from PyQt5.QtWebChannel import QWebChannel
 from ui.ui_webview import MyWebView
 from util.pageToQt1 import PageToQt
 from ui.ui_rule import Ui_Rule
+from ui.ui_login import Ui_login
 from ui.ui_process import Ui_Process
 from ui.ui_task_list import Ui_Task
 from util.rest_service import RestService
@@ -25,6 +26,7 @@ class Ui_Main(QMainWindow):
         splitter.setOrientation(Qt.Horizontal)
         self.setCentralWidget(splitter)
         self.setMinimumSize(1200,800)
+        self.setWindowTitle('采集器')
         # self.showMaximized()
 
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QTableWidgetItem,QMessageBox,QComboBox
+from PyQt5.QtWidgets import QTableWidgetItem,QMessageBox,QComboBox,QInputDialog,QLineEdit
 import traceback
 
 class Table_Util(object):
@@ -73,6 +73,24 @@ class Table_Util(object):
         while len(target_table.selectedIndexes())!=0:
             selectRow = target_table.selectedIndexes()
             target_table.removeRow(selectRow[0].row())
+
+    @classmethod
+    def modify_data(cls,prev):
+        table_list = [prev.navi_table,prev.flip_table,prev.field_table]
+        target_table = list(filter(lambda x: not x.isHidden(), table_list))[0]
+        row_arr = [i.row() for i in target_table.selectedIndexes()]
+        column = target_table.currentColumn()
+
+        content, ok = QInputDialog.getText(prev, "修改内容",
+                                        "请输入修改后的内容",
+                                        QLineEdit.Normal, "")
+        if ok:
+            print(content)
+            for row in row_arr:
+                target_table.setItem(row,column,QTableWidgetItem(content))
+
+
+
 
 
     @classmethod

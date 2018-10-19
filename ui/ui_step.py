@@ -34,6 +34,7 @@ class Ui_Setp(QMainWindow):
         self.navi_table.setHorizontalHeaderLabels(["动作", "提取元素", "XPATH","URL处理"])
 
 
+
         self.flip_table = QTableWidget(self.split)
         self.flip_table.setObjectName("flip_table")
         self.flip_table.setColumnCount(5)
@@ -78,16 +79,19 @@ class Ui_Setp(QMainWindow):
         table_tool_widget_layout = QVBoxLayout()
         table_tool_widget.setLayout(table_tool_widget_layout)
         cleanDataBtn= QPushButton(table_tool_widget)
-        cleanDataBtn.setText("清除表格")
+        cleanDataBtn.setText("清空表格")
         cleanSelectedDataBtn= QPushButton(table_tool_widget)
         cleanSelectedDataBtn.setText("删除选中表格")
+        modifyDataBtn= QPushButton(table_tool_widget)
+        modifyDataBtn.setText("修改数据")
         cleanDataBtn.clicked.connect(lambda :Table_Util.clean_table(self))
         cleanSelectedDataBtn.clicked.connect(lambda :Table_Util.clean_selected_data(self))
+        modifyDataBtn.clicked.connect(lambda :Table_Util.modify_data(self))
         table_tool_widget_layout.addWidget(cleanDataBtn)
         table_tool_widget_layout.addWidget(cleanSelectedDataBtn)
+        table_tool_widget_layout.addWidget(modifyDataBtn)
         table_tool.setWidget(table_tool_widget)
         self.addDockWidget(Qt.RightDockWidgetArea,table_tool)
-
 
 
 

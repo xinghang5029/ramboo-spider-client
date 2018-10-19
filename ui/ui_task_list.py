@@ -56,9 +56,11 @@ class Ui_Task(QMainWindow):
 
     def show_task(self,item):
         try:
-            id = int(item.text(6))
-            name = item.text(0)
-            self.prev.create_tab(1,id,name)
+            type = item.text(7)
+            if type == "task":
+                id = int(item.text(6))
+                name = item.text(0)
+                self.prev.create_tab(1,id,name)
         except Exception as a:
             print(a)
 

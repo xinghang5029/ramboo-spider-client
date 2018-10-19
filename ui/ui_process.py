@@ -33,7 +33,7 @@ class Ui_Process(QMainWindow):
         self.prev_step  = QAction(QIcon("../images/prev-step.png"), "上一步", self)
         self.next_step  = QAction(QIcon("../images/next-step.png"), "下一步", self)
         self.save_step  = QAction(QIcon("../images/save-step.png"), "保存", self)
-        self.setting_step  = QAction(QIcon("../images/setting.png"), "设置", self)
+        self.setting_step  = QAction(QIcon("../images/setting.png"), "采集设置", self)
         self.toolbar.addAction(self.prev_step)
         self.toolbar.addAction(self.next_step)
         self.toolbar.addAction(self.save_step)
@@ -60,7 +60,7 @@ class Ui_Process(QMainWindow):
         self.prev_step.triggered.connect(lambda :self.rule_process.process(0))
         self.next_step.triggered.connect(lambda :self.rule_process.process(1))
         self.save_step.triggered.connect(lambda :self.rule_process.save(self.task_id))
-        self.setting_step.triggered.connect(lambda :self.rule_process.process(3))
+        self.setting_step.triggered.connect(lambda :self.rule_process.process(2))
 
 
 

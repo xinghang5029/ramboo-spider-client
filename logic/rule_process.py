@@ -6,6 +6,7 @@ from util.support import Support
 from dao.basic_dao import BasicDao
 from util.table_util import Table_Util
 from util.rest_service import RestService
+from ui.ui_acq_setting import Ui_Acq_Setting
 import traceback,time
 class RuleProcess(object):
 
@@ -26,6 +27,8 @@ class RuleProcess(object):
                 self.prev_step()
             elif index == 1:
                 self.next_step()
+            elif index == 2:
+                self.show_setting()
 
         except Exception as a:
             print(a)
@@ -241,6 +244,10 @@ class RuleProcess(object):
                 self.prev.transcribe.step.split.widget(1).hide()
                 self.prev.transcribe.step.split.widget(2).hide()
 
+    def show_setting(self):
+        acq_setting = Ui_Acq_Setting(self.task_id)
+        acq_setting.show()
+        acq_setting.exec_()
 
 
     def basic_info_check(self,task_name,task_url,theme,category):

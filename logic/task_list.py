@@ -7,7 +7,7 @@ from functools import partial
 from spider_process.download import DownLoad
 from spider_process.spider import Spider
 from util.rbQueue import RbQueue
-import time,threading
+import time,threading,json
 
 class TaskList(object):
 
@@ -130,6 +130,9 @@ class TaskList(object):
         try:
             # 获取选中节点的id
             id_arr = [item.text(6) for item in TaskList.check_node]
+            if not len(id_arr):
+                QMessageBox.information(self.widget,"温馨提示","请选择需要删除的任务")
+                return
         except Exception as a:
             print(a)
         result = BasicDao.delete_task_by_ids(id_arr)
@@ -170,8 +173,15 @@ class TaskList(object):
         settings["headers"] = None
         settings["cookies"] = None
         settings["proxy"] = None
-        # download = DownLoad(settings)
-        download = DownLoad(settings,type="dfa")
+        acq_rule = BasicDao.query_strategy_by_taskid(task_id)
+        if acq_rule:
+            rule = json.loads(acq_rule['rule'])
+            if rule['navi_flag'] == 0:
+                download = DownLoad(settings,type="dfa")
+            else:
+                download = DownLoad(settings)
+        else:
+            download = DownLoad(settings)
         spider = Spider(download,info)
         spider.start()
         file_thread = threading.Thread(target=self.acq_field, args=())
@@ -193,11 +203,17 @@ class TaskList(object):
             if not RbQueue.rb_queue.empty():
                 task = RbQueue.rb_queue.get()
                 settings["url"] = task['url']
-                download = DownLoad(settings)
-                # download = DownLoad(settings,type="fdsf")
+                acq_rule = BasicDao.query_strategy_by_taskid(task['id'])
+                if acq_rule:
+                    rule = json.loads(acq_rule['rule'])
+                    if rule['detail_flag'] == 0:
+                        download = DownLoad(settings,type="dfa")
+                    else:
+                        download = DownLoad(settings)
+                else:
+                    download = DownLoad(settings)
                 spider = Spider(download,task['rule'])
                 spider.detail_start()
-
             else:
                 time.sleep(1)
                 break

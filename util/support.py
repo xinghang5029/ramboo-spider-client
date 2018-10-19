@@ -9,3 +9,16 @@ class Support:
             return True
         else:
             return False
+
+
+    @classmethod
+    def reg_validate_python(cls,content,reg):
+        try:
+            index = int(reg[reg.rindex("[")+1:-1])
+            matchObj = re.search(reg[:reg.rindex(")")].replace("reg(",""), content, re.S)
+            if matchObj:
+                return matchObj.group(index)
+            else:
+                return None
+        except Exception as a:
+            return None
