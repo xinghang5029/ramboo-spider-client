@@ -8,4 +8,5 @@ class MainWebView(object):
         self.ui = ui
 
     def refresh(self,url):
-        self.ui.webview.load(QUrl(url))
+        currentView = self.ui.tabWidget.currentWidget().centralWidget()
+        currentView.load(QUrl(url))
