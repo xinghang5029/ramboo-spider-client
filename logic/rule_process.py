@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtGui import QPixmap,QMovie
+from PyQt5.QtWebChannel import QWebChannel
 from PyQt5.QtCore import QUrl
 from util.support import Support
 from dao.basic_dao import BasicDao
 from util.table_util import Table_Util
 from util.rest_service import RestService
 from ui.ui_acq_setting import Ui_Acq_Setting
+from util.pageToQt import PageToQt
+from ui.ui_thread import MyQthread
 import traceback,time
 class RuleProcess(object):
 
@@ -208,6 +211,7 @@ class RuleProcess(object):
                 self.prev.transcribe.step.split.widget(2).hide()
                 self.prev.transcribe.step.split.widget(3).hide()
                 self.prev.transcribe.step.illustrate.setText("请用鼠标点击页面中的列表项")
+                self.prev.transcribe.browse.tabWidget.setCurrentIndex(0)
             else:
                 m = QMovie('../images/s-step-5.gif')
                 self.prev.step_label.single_field.setMovie(m)
@@ -217,6 +221,7 @@ class RuleProcess(object):
                 self.prev.transcribe.step.split.widget(1).hide()
                 self.prev.transcribe.step.split.widget(2).hide()
                 self.prev.transcribe.step.illustrate.setText("请用鼠标点击需要采集的页面元素")
+
         if self.step == 4:
             self.step = self.step-1
             if self.prev.step_label.acq_type !=3:
@@ -232,6 +237,7 @@ class RuleProcess(object):
             self.prev.transcribe.step.split.widget(2).show()
             self.prev.transcribe.step.split.widget(1).hide()
             self.prev.transcribe.step.split.widget(3).hide()
+            self.prev.transcribe.browse.tabWidget.setCurrentIndex(0)
             self.prev.transcribe.step.illustrate.setText("请用鼠标点击页面中的翻页元素，设置翻页规则。如果不设置，则默认不翻页。")
         if self.step == 5:
             self.step = self.step-1
@@ -318,6 +324,7 @@ class RuleProcess(object):
         """
         self.prev.transcribe.browse.webview.load(QUrl(self.prev.basic.site_url_edit.text()))
 
+
         if self.prev.step_label.acq_type !=3:
             m = QMovie('../images/s-step-3.gif')
             self.prev.step_label.navi.setMovie(m)
@@ -341,6 +348,7 @@ class RuleProcess(object):
 
         self.prev.step_label.basic_info.setPixmap(QPixmap('../images/c-step-1.png'))
         self.prev.step_label.site_type.setPixmap(QPixmap('../images/c-step-2.png'))
+        self.prev.transcribe.browse.tabWidget.setCurrentIndex(0)
 
     def flip_step_process(self):
         """
@@ -372,7 +380,7 @@ class RuleProcess(object):
             self.prev.transcribe.step.split.widget(1).hide()
             self.prev.transcribe.step.split.widget(3).hide()
         self.prev.transcribe.step.illustrate.setText("请用鼠标点击页面中的翻页元素，设置翻页规则。如果不设置，则默认不翻页。")
-
+        self.prev.transcribe.browse.tabWidget.setCurrentIndex(0)
 
 
     def field_step_process(self):
@@ -393,6 +401,8 @@ class RuleProcess(object):
         self.prev.transcribe.step.split.widget(3).show()
 
         self.prev.transcribe.step.illustrate.setText("请用鼠标点击需要采集的页面元素")
+        self.prev.transcribe.browse.tabWidget.setCurrentIndex(1);
+        # self.prev.transcribe.browse.tabWidget.currentWidget().centralWidget().page().runJavaScript(MyJs.INIT_EVENT)
 
 
     def finish_step_process(self):
