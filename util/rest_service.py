@@ -45,6 +45,20 @@ class RestService(QThread):
         except Exception as a:
             QMessageBox.warning(RestService.widget.step,"温馨提示","规则录制出现异常:{}".format(traceback.format_exc()))
 
+    def deal_data_once(self,data):
+        try:
+            info_list = json.loads(data)
+            acq_type = RestService.widget.prev.step_label.acq_type
+            table_list = [RestService.widget.step.navi_table,RestService.widget.step.flip_table,RestService.widget.step.field_table]
+            self.target_table = list(filter(lambda x: not x.isHidden(), table_list))[0]
+            if isinstance(info_list,list):
+                for info in info_list:
+                    Table_Util.insert_single_data(self.target_table,info)
+            else:
+                Table_Util.insert_single_data(self.target_table,info_list)
+        except Exception as a:
+            QMessageBox.warning(RestService.widget.step,"温馨提示","规则录制出现异常:{}".format(traceback.format_exc()))
+
     def add_more_data(self,):
         rows = self.target_table.rowCount()
         if rows >= 2:

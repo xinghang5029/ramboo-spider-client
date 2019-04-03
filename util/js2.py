@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-class MyJs2(object):
+class MyJs(object):
 
     INIT_EVENT = '''
     
@@ -9,7 +9,7 @@ class MyJs2(object):
     {
         for(var i = 0; i < objs.length; i++) {
             (function(i){
-                /*
+                
                 objs[i].onmouseover = function(ev){
                     var oEvent = ev || event;
                     oEvent.cancelBubble = true;
@@ -18,9 +18,7 @@ class MyJs2(object):
                     oEvent.target.style.borderStyle = 'outset';
                     oEvent.target.style.borderColor = 'red';
                     objs[i].addEventListener("mouseout",clearStyle,true);
-                    
-                };*/
-                
+                };
                 objs[i].onclick = function(ev){
                     var oEvent = ev || event;
                     //js阻止事件冒泡
@@ -30,18 +28,93 @@ class MyJs2(object):
                         oEvent.target.setAttribute("target","_blank");
                         removeAlloutEvent();
                         oEvent.target.style.borderWidth = '2px';
-                        oEvent.target.style.borderStyle = 'outset';
-                        oEvent.target.style.borderColor = 'blue';
+                        oEvent.target.style.borderStyle = 'dotted';
+                        oEvent.target.style.borderColor = 'red';
                         oEvent.target.setAttribute("clickable",true);
-                        resultToQt(getInfo(oEvent.target));
+                        //resultToQt(getInfo(oEvent.target));
+                        var myinput = document.getElementById('rule_info');
+                        myinput.value = getInfo(oEvent.target);
+                        document.getElementById("myform_spider").submit();
                     }else{
-                        oEvent.target.removeAttribute("target");
+                        //oEvent.target.removeAttribute("target");
                     }
                 };
-                
                 objs[i].addEventListener("mouseout",clearStyle,true);
             })(i)
         }
+        
+    }
+    
+    
+    function js_xpath(xpath) {
+        //STR_XPATH = '//*[@id="itemContainer"]/tbody/tr/td/a';
+        //STR_XPATH = '//*[@id="frm"]/table/tbody/tr/td/table/tbody/tr/td/a';
+        var xresult = document.evaluate(xpath, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+        var xnodes = [];
+        var xres;
+        /*
+        while (xres = xresult.iterateNext()) {
+            xnodes.push(xres);
+            
+        }*/
+        for(i=0,length=xresult.snapshotLength;i<length;i++){
+            thisElement = xresult.snapshotItem(i);
+            thisElement
+            thisElement.style.borderWidth = '2px';
+            thisElement.style.borderStyle = 'dotted';
+            thisElement.style.borderColor = 'red';
+        
+        }
+        //alert(xnodes);
+        return xnodes;
+    }
+    
+    
+    
+    
+    function get_all_xpath(xpath){
+        xpath = xpath.replace(/\\[\\d\\]/g,'');
+        return xpath;
+    }
+    
+    
+    
+
+    
+    function getTitle(){
+        var title = "";
+        try{
+            title = document.title;
+        }catch(err){
+            title = "链接"
+        }
+        return title;
+    }
+    
+    
+    function appendForm(){
+        newform = document.createElement("form");
+        newform.setAttribute('name','myform_spider');
+        newform.setAttribute('accept-charset','UTF-8');
+        newform.setAttribute('id','myform_spider');
+        newform.setAttribute('action','http://localhost:9997/internet');
+        newform.setAttribute('method','post');
+        newform.setAttribute('style','display: none;');
+        newform.setAttribute('target','spider_iframe');
+        document.getElementsByTagName("body")[0].appendChild(newform)
+        
+        var myinput = document.createElement('input');
+        myinput.type = 'hidden';
+        myinput.id = 'rule_info';
+        myinput.name = 'rule_info';
+        myinput.value = '';
+        document.myform_spider.appendChild(myinput);
+        
+        var spider_iframe = document.createElement('iframe');
+        spider_iframe.setAttribute('name','spider_iframe');
+        spider_iframe.setAttribute('style','display: none;');
+        spider_iframe.setAttribute('id','spider_iframe');
+        document.getElementsByTagName("body")[0].appendChild(spider_iframe)
         
     }
     
@@ -77,10 +150,12 @@ class MyJs2(object):
     }
     
     
+    
+    
     //从页面返回数据到qt
     function resultToQt(value){
-        if(window.bridge2 != null){
-            window.bridge2.strValue = value
+        if(window.bridge != null){
+            window.bridge.strValue = value
         }
     
     }
@@ -114,13 +189,13 @@ class MyJs2(object):
     
     initEvent();
     
+    setTimeout(appendForm(),1000);
+    
     
     new QWebChannel(qt.webChannelTransport, function (channel) {
     
-        window.bridge2 = channel.objects.bridge2;
+        window.bridge = channel.objects.bridge;
     })
-    
-    
     
    
     '''

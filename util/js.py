@@ -9,17 +9,18 @@ class MyJs(object):
     {
         for(var i = 0; i < objs.length; i++) {
             (function(i){
-                /*
+                
                 objs[i].onmouseover = function(ev){
                     var oEvent = ev || event;
                     oEvent.cancelBubble = true;
                     oEvent.stopPropagation();
                     oEvent.target.style.borderWidth = '2px';
-                    oEvent.target.style.borderStyle = 'outset';
+                    if(oEvent.target.getAttribute("myselect")==null){
+                        oEvent.target.style.borderStyle = 'outset';
+                    }
                     oEvent.target.style.borderColor = 'red';
                     objs[i].addEventListener("mouseout",clearStyle,true);
-                    
-                };*/
+                };
                 objs[i].onclick = function(ev){
                     var oEvent = ev || event;
                     //js阻止事件冒泡
@@ -34,17 +35,47 @@ class MyJs(object):
                         oEvent.target.setAttribute("clickable",true);
                         //resultToQt(getInfo(oEvent.target));
                         var myinput = document.getElementById('rule_info');
-                        myinput.value = getInfo(oEvent.target);
+                        xpath = readXPath(oEvent.target);
+                        myinput.value = js_xpath(get_all_xpath(xpath));
+                        //myinput.value = getInfo(oEvent.target);
                         document.getElementById("myform_spider").submit();
+                        
+                        
                     }else{
-                        oEvent.target.removeAttribute("target");
+                        //oEvent.target.removeAttribute("target");
                     }
                 };
-                objs[i].addEventListener("mouseout",clearStyle,true);
+                //objs[i].addEventListener("mouseout",clearStyle,true);
             })(i)
         }
         
     }
+    
+    
+    function js_xpath(xpath) {
+        var xresult = document.evaluate(xpath, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+        var xnodes = [];
+        for(i=0,length=xresult.snapshotLength;i<length;i++){
+            thisElement = xresult.snapshotItem(i);
+            thisElement.style.borderWidth = '2px';
+            thisElement.style.borderStyle = 'dotted';
+            thisElement.style.borderColor = 'red';
+            thisElement.setAttribute("myselect",true);
+            xnodes.push(getInfo(thisElement));
+        }
+        return JSON.stringify(xnodes);
+        
+    }
+    
+    
+    function get_all_xpath(xpath){
+        xpath = xpath.replace(/\\[\\d\\]/g,'');
+        return xpath;
+    }
+    
+    
+    
+
     
     function getTitle(){
         var title = "";
@@ -94,10 +125,13 @@ class MyJs(object):
     //去除样式
     function clearStyle(eve)
     {
-        eve.cancelBubble = true;
-        eve.stopPropagation();
-        eve.target.style.borderStyle = 'none';
-        eve.target.removeAttribute("clickable");
+        
+        if(eve.target.getAttribute("myselect")==null){
+            eve.cancelBubble = true;
+            eve.stopPropagation();
+            eve.target.style.borderStyle = 'none';
+            //eve.target.removeAttribute("clickable");
+        }
     }
     
     
@@ -111,8 +145,11 @@ class MyJs(object):
         info.reg = ""
         info.func = ""
         info.field = ""
-        return JSON.stringify(info);
+        return info;
+        //return JSON.stringify(info);
     }
+    
+    
     
     
     //从页面返回数据到qt

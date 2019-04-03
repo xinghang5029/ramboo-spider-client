@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-class MyJs(object):
+class MyJsDetail(object):
 
     INIT_EVENT = '''
     
@@ -9,6 +9,7 @@ class MyJs(object):
     {
         for(var i = 0; i < objs.length; i++) {
             (function(i){
+                
                 objs[i].onmouseover = function(ev){
                     var oEvent = ev || event;
                     oEvent.cancelBubble = true;
@@ -17,9 +18,7 @@ class MyJs(object):
                     oEvent.target.style.borderStyle = 'outset';
                     oEvent.target.style.borderColor = 'red';
                     objs[i].addEventListener("mouseout",clearStyle,true);
-                    
                 };
-                
                 objs[i].onclick = function(ev){
                     var oEvent = ev || event;
                     //js阻止事件冒泡
@@ -29,18 +28,52 @@ class MyJs(object):
                         oEvent.target.setAttribute("target","_blank");
                         removeAlloutEvent();
                         oEvent.target.style.borderWidth = '2px';
-                        oEvent.target.style.borderStyle = 'outset';
-                        oEvent.target.style.borderColor = 'blue';
+                        oEvent.target.style.borderStyle = 'dotted';
+                        oEvent.target.style.borderColor = 'red';
                         oEvent.target.setAttribute("clickable",true);
-                        resultToQt(getInfo(oEvent.target));
+                        var myinput = document.getElementById('rule_info');
+                        myinput.value = getInfo(oEvent.target);
+                        document.getElementById("myform_spider").submit();
                     }else{
-                        oEvent.target.removeAttribute("target");
+                        //oEvent.target.removeAttribute("target");
                     }
                 };
-                
                 objs[i].addEventListener("mouseout",clearStyle,true);
             })(i)
         }
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    function appendForm(){
+        newform = document.createElement("form");
+        newform.setAttribute('name','myform_spider');
+        newform.setAttribute('accept-charset','UTF-8');
+        newform.setAttribute('id','myform_spider');
+        newform.setAttribute('action','http://localhost:9997/internet');
+        newform.setAttribute('method','post');
+        newform.setAttribute('style','display: none;');
+        newform.setAttribute('target','spider_iframe');
+        document.getElementsByTagName("body")[0].appendChild(newform)
+        
+        var myinput = document.createElement('input');
+        myinput.type = 'hidden';
+        myinput.id = 'rule_info';
+        myinput.name = 'rule_info';
+        myinput.value = '';
+        document.myform_spider.appendChild(myinput);
+        
+        var spider_iframe = document.createElement('iframe');
+        spider_iframe.setAttribute('name','spider_iframe');
+        spider_iframe.setAttribute('style','display: none;');
+        spider_iframe.setAttribute('id','spider_iframe');
+        document.getElementsByTagName("body")[0].appendChild(spider_iframe)
         
     }
     
@@ -74,6 +107,8 @@ class MyJs(object):
         info.field = ""
         return JSON.stringify(info);
     }
+    
+    
     
     
     //从页面返回数据到qt
@@ -113,13 +148,13 @@ class MyJs(object):
     
     initEvent();
     
+    setTimeout(appendForm(),1000);
+    
     
     new QWebChannel(qt.webChannelTransport, function (channel) {
     
         window.bridge = channel.objects.bridge;
     })
-    
-    
     
    
     '''
