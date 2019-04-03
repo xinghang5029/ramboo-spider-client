@@ -184,8 +184,8 @@ class TaskList(object):
             download = DownLoad(settings)
         spider = Spider(download,info)
         spider.start()
-        file_thread = threading.Thread(target=self.acq_field, args=())
-        file_thread.start()
+        # file_thread = threading.Thread(target=self.acq_field, args=())
+        # file_thread.start()
 
 
     def acq_field(self):
@@ -216,5 +216,5 @@ class TaskList(object):
                 spider.detail_start()
             else:
                 time.sleep(1)
-                break
+                # break
         print("=========================本次采集完成===============================")
